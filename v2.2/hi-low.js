@@ -1,9 +1,5 @@
 function gameControl() {
   let deck =[];
-  const rl = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
 
   function createDeck() {
     for (let i = 2; deck.length < 52; i++) {
@@ -15,6 +11,11 @@ function gameControl() {
   }
 
   createDeck();
+
+  const rl = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
   let startCard = drawCard();
   let score = 0;
@@ -30,7 +31,7 @@ function gameControl() {
         if (drawnCard % 100 > startCard % 100 && guess === 'l'
         || drawnCard % 100 < startCard % 100 && guess === 'h') {
           console.log(`\n\nYou drew a "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
-          console.log('Sorry, game over. \nYour score is:', score);
+          console.log('Sorry, game over. \nYour final score was:', score);
           // // For testing the deck
           // console.log('---------------------------------------------------')
           // console.log(deck);
