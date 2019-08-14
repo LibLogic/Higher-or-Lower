@@ -1,53 +1,59 @@
 function gameControl() {
   let deck =[];
-
   function createDeck() {
     for (let i = 2; deck.length < 52; i++) {
-      deck.push(100 + i);
-      deck.push(200 + i);
-      deck.push(300 + i);
-      deck.push(400 + i);
+      deck.push(100 + i); // clubs
+      deck.push(200 + i); // diamonds
+      deck.push(300 + i); // hearts
+      deck.push(400 + i); // spades
     }
   }
 
   createDeck();
 
-  const rl = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  let startCard = drawCard();
-  let score = 0;
-  var recursiveAsyncReadLine = function () {
+  let startCard = drawCard(), score = 0;
+  console.clear();
+  function recurseRL () {
     console.log(`\nHouse card is now: "${convertCardToObj(startCard).cardValue} of ${convertCardToObj(startCard).suit}"`);
+    var rl = require('readline').createInterface(process.stdin, process.stdout, null);
     rl.question(`What's your guess, 'h' for higher or 'l' for lower? `, function (guess) {
-
-      if (!(guess === 'l' || guess === 'h')) {
-        console.log(`PLEASE ONLY USE 'l' AND 'h' KEYS`);
-        recursiveAsyncReadLine();
-      } else {
-        let drawnCard = drawCard();
-        if (drawnCard % 100 > startCard % 100 && guess === 'l'
-        || drawnCard % 100 < startCard % 100 && guess === 'h') {
-          console.log(`\n\nYou drew a "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
-          console.log('Sorry, game over. \nYour final score was:', score);
-          // // For testing the deck
-          // console.log('---------------------------------------------------')
-          // console.log(deck);
-          // console.log('---------------------------------------------------')
-          return rl.close();
-        }
-        score++;
-        console.log('\nExcellent! Your score is:', score);
-        console.log(`You drew a "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
-        startCard = drawnCard
-        recursiveAsyncReadLine();
+    if (!(guess === 'l' || guess === 'h')) {
+      console.log(`\nPLEASE ONLY USE 'l' AND 'h' KEYS`);
+      recurseRL();
+    } else {
+      let drawnCard = drawCard();
+      if (drawnCard % 100 > startCard % 100 && guess === 'l'
+      || drawnCard % 100 < startCard % 100 && guess === 'h') {
+        console.clear();
+        console.log(`\nSorry, game over.`);
+        console.log(`You drew the "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
+        console.log(`Your final score was:`, score);
+        console.log('\n\n');
+        // // For testing the deck
+        // console.log('---------------------------------------------------')
+        // console.log(deck);
+        // console.log('---------------------------------------------------')
+        return rl.close();
       }
-    });
-  };
+      if (drawnCard % 100 !== startCard % 100) {
+        score++;
+        console.clear();
+        console.log(`\nExcellent! Your score is:`, score);
+        console.log(`You drew a "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
+        startCard = drawnCard;
+        recurseRL();
+      } else {
+        console.clear();
+        console.log(`\nYou drew a "${convertCardToObj(drawnCard).cardValue} of ${convertCardToObj(drawnCard).suit}"`);
+        console.log(`That was a draw! Your don't get any points\nbut you get another try.\nYour score stays at:`, score);
+        startCard = drawnCard;
+        recurseRL();
+      }
+    }
+  });
+};
 
-  recursiveAsyncReadLine();
+  recurseRL();
 
   function drawCard() {
     let random = Math.floor(Math.random() * deck.length);
@@ -70,6 +76,4 @@ function gameControl() {
   }
 }
 
-console.log(
-  gameControl()
-);
+gameControl()
