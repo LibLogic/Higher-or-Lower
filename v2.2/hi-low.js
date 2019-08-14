@@ -76,4 +76,4 @@ function gameControl() {
   }
 }
 
-gameControl()
+gameControl();
